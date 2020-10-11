@@ -4,50 +4,46 @@
 
 #include <QWidget>
 #include <QKeyEvent>
-#include "coordinate.h"
 #include <vector>
+#include "coordinate.h"
+
 class Snake : public QWidget {
 
   public:
       Snake(QWidget *parent = 0);
       std::vector<coordinate> placed_obstacles;
 
-  protected:
+  //protected:
       void paintEvent(QPaintEvent *);
       void timerEvent(QTimerEvent *);
       void keyPressEvent(QKeyEvent *);
 
   private:
-      QImage dot;
-      QImage head;
-      QImage apple;
-      QImage obstacle;
+      QImage dot_png;
+      QImage head_png;
+      QImage apple_png;
+      QImage obstacle_png;
 
+      //static const int ALL_DOTS = 900;
       static const int B_WIDTH = 600;
       static const int B_HEIGHT = 600;
-      static const int DOT_SIZE = 10;
-      static const int ALL_DOTS = 900;
-      static const int RAND_POS = 30;
-      //static const int DELAY = 140;
-      int DELAY = 100;
+      const int BODY_SIZE = 10;
+      const int DELAY = 140;
       int score = 0;
 
 
       int timerId;
-      int dots;
-      int apple_x;
-      int apple_y;
-      //int obstacle_x;
-      //int obstacle_y;
+      int snake_size;
+      coordinate apple;
 
-      int x[ALL_DOTS];
-      int y[ALL_DOTS];
+      int x_axis[B_WIDTH];
+      int y_axis[B_HEIGHT];
 
       bool leftDirection;
       bool rightDirection;
       bool upDirection;
       bool downDirection;
-      bool inGame;
+      bool GamePlay;
 
       void loadImages();
       void initGame();

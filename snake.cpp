@@ -9,15 +9,21 @@
 #include "snake.h"
 #include <iostream>
 #include <random>
+#include <QGamepad>
+#include <QGamepadKeyNavigation>
+#include <QGamepadManager>
 
+
+//constructor
 Snake::Snake(QWidget *parent) : QWidget(parent) {
 
     setStyleSheet("background-color:grey;");
     leftDirection = false;
+    //start snake moving in right direction
     rightDirection = true;
     upDirection = false;
     downDirection = false;
-    inGame = true;
+    GamePlay = true;
 
     resize(B_WIDTH, B_HEIGHT);
     loadImages();
@@ -26,19 +32,20 @@ Snake::Snake(QWidget *parent) : QWidget(parent) {
 
 void Snake::loadImages() {
 
-    dot.load(":/new/prefix1/dot.png");
-    head.load(":/new/prefix1/head.png");
-    apple.load(":/new/prefix1/apple.png");
-    obstacle.load(":/new/prefix1/obstacle.png");
+    dot_png.load(":/new/prefix1/dot.png");
+    head_png.load(":/new/prefix1/head.png");
+    apple_png.load(":/new/prefix1/apple.png");
+    obstacle_png.load(":/new/prefix1/obstacle.png");
 }
 
 void Snake::initGame() {
 
-    dots = 3;
+    snake_size = 3;
 
-    for (int z = 0; z < dots; z++) {
-        x[z] = 50 - z * 10;
-        y[z] = 50;
+    //place snake in the game
+    for (int z = 0; z < snake_size; z++) {
+        x_axis[z] = 150 - (z * 10);
+        y_axis[z] = 150;
     }
 
     locateApple();
@@ -59,60 +66,53 @@ void Snake::doDrawing() {
 
     QPainter qp(this);
 
-    std::cout << "number of obs->" << placed_obstacles.size() << std::endl;
-    std::cout << "score: " << score << std::endl;
-
-    if(inGame) {
+    if(GamePlay) {
          for(unsigned long int i{}; i < placed_obstacles.size() ; i++) {
-            qp.drawImage(placed_obstacles[i].m_x, placed_obstacles[i].m_y, obstacle);
+            qp.drawImage(placed_obstacles[i].m_x, placed_obstacles[i].m_y, obstacle_png);
          }
-         qp.drawImage(apple_x, apple_y, apple);
-         for (int z = 0; z < dots; z++) {
+         qp.drawImage(apple.m_x, apple.m_y, apple_png);
+         for (int z = 0; z < snake_size; z++) {
             if (z == 0) {
-                qp.drawImage(x[z], y[z], head);
+                qp.drawImage(x_axis[z], y_axis[z], head_png);
             }
             else {
-                qp.drawImage(x[z], y[z], dot);
+                qp.drawImage(x_axis[z], y_axis[z], dot_png);
             }
         }
 
     }
     else {
-        std::cout << "Game Over" << std::endl;
         gameOver(qp);
     }
 }
 
 void Snake::gameOver(QPainter &qp) {
 
-    QString message = "Game over";
-    QString display = "Your score ";
-    QString display_score= QString::number(score);
+    QString GameOver = "Game over";
+    QString YourScore = "Your score ";
+    QString display_score = QString::number(score);
     QSound::play(":/new/prefix1/fail-trombone-03.wav");
     QFont font("Courier", 15, QFont::DemiBold);
     QFontMetrics fm(font);
-    int textWidth = fm.width(message);
+    int textWidth = fm.width(GameOver);
 
     qp.setFont(font);
     int h = height();
     int w = width();
 
     qp.translate(QPoint(w/2, h/2));
-    qp.drawText(-textWidth/2, 0, message);
-    qp.drawText(-textWidth/2, 20, display+=display_score);
+    qp.drawText(-textWidth/2, 0, GameOver);
+    qp.drawText(-textWidth/2, 20, YourScore+=display_score);
 }
 
 void Snake::checkApple() {
 
-    if ((x[0] > apple_x - 10 && x[0] < apple_x + 10 )
-            && (y[0] > apple_y - 10 && y[0] < apple_y + 10)) {
-
-        //dots++;
-        dots+=3;
+    if((x_axis[0] > apple.m_x - 15 && x_axis[0] < apple.m_x + 15) && (y_axis[0] > apple.m_y - 15 && y_axis[0] < apple.m_y + 15)) {
+        snake_size+=3;
         score++;
         QSound::play(":/new/prefix1/button-1.wav");
         locateApple();
-        if(score%3 == 0) locateObstacle();
+        if(score%2 == 0) locateObstacle();
 
     }
 }
@@ -122,13 +122,13 @@ void Snake::checkObstacle() {
   std::cout << placed_obstacles.size() << std::endl;
 
     for(unsigned long int i{}; i < placed_obstacles.size() ; i++) {
-        if ((x[0] > placed_obstacles[i].m_x - 10 && x[0] < placed_obstacles[i].m_x + 10)
-            && (y[0] > placed_obstacles[i].m_y - 10 && y[0] < placed_obstacles[i].m_y + 10)) {
-            std::cout << "x[0]" << x[0] << "," << "y[0]" << y[0] << std::endl;
+        if ((x_axis[0] > placed_obstacles[i].m_x - 10 && x_axis[0] < placed_obstacles[i].m_x + 10)
+            && (y_axis[0] > placed_obstacles[i].m_y - 10 && y_axis[0] < placed_obstacles[i].m_y + 10)) {
+            std::cout << "x[0]" << x_axis[0] << "," << "y[0]" << y_axis[0] << std::endl;
             std::cout << placed_obstacles[i].m_x << "," << placed_obstacles[i].m_y << std::endl;
             QSound::play(":/new/prefix1/button-1.wav");
-            inGame = false;
-            if(!inGame) {
+            GamePlay = false;
+            if(!GamePlay) {
                 killTimer(timerId);
             }
         }
@@ -139,85 +139,75 @@ void Snake::checkObstacle() {
 
 void Snake::move() {
 
-    for (int z = dots; z > 0; z--) {
-        x[z] = x[(z - 1)];
-        y[z] = y[(z - 1)];
+    for (int z = snake_size; z > 0; z--) {
+        x_axis[z] = x_axis[(z - 1)];
+        y_axis[z] = y_axis[(z - 1)];
     }
 
     if (leftDirection) {
-        x[0] -= DOT_SIZE;
+        x_axis[0] -= BODY_SIZE;
     }
 
     if (rightDirection) {
-        x[0] += DOT_SIZE;
+        x_axis[0] += BODY_SIZE;
     }
 
     if (upDirection) {
-        y[0] -= DOT_SIZE;
+        y_axis[0] -= BODY_SIZE;
     }
 
     if (downDirection) {
-        y[0] += DOT_SIZE;
+        y_axis[0] += BODY_SIZE;
     }
 }
 
 void Snake::checkCollision() {
 
     //check for self collision
-    for (int z = dots; z > 0; z--) {
-        if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
-            inGame = false;
+    for (int z = snake_size; z > 0; z--) {
+        if ((z > 4) && (x_axis[0] == x_axis[z]) && (y_axis[0] == y_axis[z])) {
+            GamePlay = false;
         }
     }
 
-    //restore inGame = false if no wrap around required
-    if (y[0] >= B_HEIGHT) {
-        y[0] = 0;
-        //inGame = false;
+    //restore GamePlay = false if no wrap around required
+    if (y_axis[0] >= B_HEIGHT) {
+        y_axis[0] = 0;
+        //GamePlay = false;
     }
 
-    if (y[0] < 0) {
-        y[0] = B_HEIGHT;
-        //inGame = false;
+    if (y_axis[0] < 0) {
+        y_axis[0] = B_HEIGHT;
+        //GamePlay = false;
     }
 
-    if (x[0] >= B_WIDTH) {
-        x[0] = 0;
-        //inGame = false;
+    if (x_axis[0] >= B_WIDTH) {
+        x_axis[0] = 0;
+        //GamePlay = false;
     }
 
-    if (x[0] < 0) {
-        x[0] = B_WIDTH;
-        //inGame = false;
+    if (x_axis[0] < 0) {
+        x_axis[0] = B_WIDTH;
+        //GamePlay = false;
     }
 
-    if(!inGame) {
+    if(!GamePlay) {
         killTimer(timerId);
     }
 }
 
 void Snake::locateApple() {
 
-    QTime time = QTime::currentTime();
-    qsrand((uint) time.msec());
+    std::random_device dev;
+    std::uniform_int_distribution<int> dist(0,400);
 
-
-    int r = qrand() % RAND_POS;
-    apple_x = (r * DOT_SIZE);
-
-
-    r = qrand() % RAND_POS;
-    apple_y = (r * DOT_SIZE);
+    apple.m_x = dist(dev);
+    apple.m_y = dist(dev);
 
 }
 
 
 void Snake::locateObstacle() {
-
-    //std::cout << "locate obstacle" << std::endl;
-
-    QTime time = QTime::currentTime();
-    qsrand((uint) time.msec());
 
     bool not_duplicate{true};
     std::random_device dev;
@@ -228,6 +218,10 @@ void Snake::locateObstacle() {
     else {
         for(unsigned long int i{}; i < placed_obstacles.size() -1; i++) {
             if(p == placed_obstacles[i]) { not_duplicate = false; break; }
+            if((placed_obstacles[i].m_x > apple.m_x - 100 && placed_obstacles[i].m_x < apple.m_x + 100)
+                && (placed_obstacles[i].m_y > apple.m_y - 100 && placed_obstacles[i].m_y < apple.m_y + 100)) {
+                not_duplicate = false; break;
+            }
         }
         if(not_duplicate) { placed_obstacles.push_back(p); }
     }
@@ -238,7 +232,7 @@ void Snake::timerEvent(QTimerEvent *e) {
 
     Q_UNUSED(e);
 
-    if (inGame) {
+    if (GamePlay) {
 
         checkApple();
         checkObstacle();
