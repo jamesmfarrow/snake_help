@@ -59,13 +59,13 @@ void Snake::doDrawing() {
 
     QPainter qp(this);
 
+    std::cout << "number of obs->" << placed_obstacles.size() << std::endl;
+    std::cout << "score: " << score << std::endl;
+
     if(inGame) {
-        if(placed_obstacles.size() == 1) { qp.drawImage(placed_obstacles[0].m_x, placed_obstacles[0].m_y, obstacle); }
-        else {
-         for(unsigned long int i{}; i < placed_obstacles.size() - 1; i++) {
+         for(unsigned long int i{}; i < placed_obstacles.size() ; i++) {
             qp.drawImage(placed_obstacles[i].m_x, placed_obstacles[i].m_y, obstacle);
          }
-        }
          qp.drawImage(apple_x, apple_y, apple);
          for (int z = 0; z < dots; z++) {
             if (z == 0) {
@@ -104,16 +104,15 @@ void Snake::gameOver(QPainter &qp) {
 
 void Snake::checkApple() {
 
-    if ((x[0] > apple_x - 5 && x[0] < apple_x + 5 )
-            && (y[0] > apple_y - 5 && y[0] < apple_y + 5)) {
+    if ((x[0] > apple_x - 10 && x[0] < apple_x + 10 )
+            && (y[0] > apple_y - 10 && y[0] < apple_y + 10)) {
 
         //dots++;
         dots+=3;
-        std::cout << score << "," << DELAY << std::endl;
-        QSound::play(":/new/prefix1/button-1.wav");
         score++;
+        QSound::play(":/new/prefix1/button-1.wav");
         locateApple();
-        if(dots%4) locateObstacle();
+        if(score%3 == 0) locateObstacle();
 
     }
 }
@@ -123,11 +122,8 @@ void Snake::checkObstacle() {
   std::cout << placed_obstacles.size() << std::endl;
 
     for(unsigned long int i{}; i < placed_obstacles.size() ; i++) {
-        std::cout << "here" << std::endl;
         if ((x[0] > placed_obstacles[i].m_x - 10 && x[0] < placed_obstacles[i].m_x + 10)
-            && (y[0] > placed_obstacles[i].m_y - 10 && y[0] < placed_obstacles[i].m_y + 10))
-
-        {
+            && (y[0] > placed_obstacles[i].m_y - 10 && y[0] < placed_obstacles[i].m_y + 10)) {
             std::cout << "x[0]" << x[0] << "," << "y[0]" << y[0] << std::endl;
             std::cout << placed_obstacles[i].m_x << "," << placed_obstacles[i].m_y << std::endl;
             QSound::play(":/new/prefix1/button-1.wav");
@@ -137,14 +133,6 @@ void Snake::checkObstacle() {
             }
         }
     }
-
-   /*if ((x[0] == placed_obstacles[0].m_x) && (y[0] == placed_obstacles[0].m_y)) {
-        QSound::play(":/new/prefix1/button-1.wav");
-        inGame = false;
-        if(!inGame) {
-            killTimer(timerId);
-        }
-    }*/
 }
 
 
@@ -226,7 +214,7 @@ void Snake::locateApple() {
 
 void Snake::locateObstacle() {
 
-    std::cout << "locate obstacle" << std::endl;
+    //std::cout << "locate obstacle" << std::endl;
 
     QTime time = QTime::currentTime();
     qsrand((uint) time.msec());
@@ -243,12 +231,6 @@ void Snake::locateObstacle() {
         }
         if(not_duplicate) { placed_obstacles.push_back(p); }
     }
-
-    /*int r = qrand() % RAND_POS;
-    obstacle_x = (r * DOT_SIZE - 100);
-    r = qrand() % RAND_POS;
-    obstacle_y = (r * DOT_SIZE - 100);*/
-
 }
 
 

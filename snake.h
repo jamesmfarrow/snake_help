@@ -23,8 +23,8 @@ class Snake : public QWidget {
       QImage apple;
       QImage obstacle;
 
-      static const int B_WIDTH = 400;
-      static const int B_HEIGHT = 400;
+      static const int B_WIDTH = 600;
+      static const int B_HEIGHT = 600;
       static const int DOT_SIZE = 10;
       static const int ALL_DOTS = 900;
       static const int RAND_POS = 30;
