@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>apple.png</file>
+        <file>dot.png</file>
+        <file>head.png</file>
+        <file>fail-trombone-03.wav</file>
+        <file>button-1.wav</file>
+        <file>obstacle.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>obstacle.png</file>
+    </qresource>
+</RCC>
