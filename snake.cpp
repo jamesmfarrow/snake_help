@@ -154,7 +154,6 @@ void Snake::move() {
 
     //east
     if (leftDirection) {
-        //x_axis[0] -= BODY_SIZE;
         the_snake[0].m_x-=BODY_SIZE;
     }
 
@@ -207,12 +206,17 @@ void Snake::checkCollision() {
 
 void Snake::placeFood() {
 
+
+    bool notundersnake{true};
     std::random_device dev;
     std::uniform_int_distribution<int> dist(0,400);
-
-    apple.m_x = dist(dev);
-    apple.m_y = dist(dev);
-
+    coordinate temp((dist(dev)), (dist(dev)));
+    for(unsigned long int i{}; i < the_snake.size(); i++ ) {
+        if((temp.m_x > the_snake[i].m_x - 15 && temp.m_x < the_snake[i].m_x + 15)
+            && (temp.m_y > the_snake[i].m_y - 15 && temp.m_y < the_snake[i].m_y +15))
+        { notundersnake = false; break; }
+    }
+    if(notundersnake) apple = temp;
 }
 
 
