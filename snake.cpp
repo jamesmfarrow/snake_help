@@ -18,11 +18,11 @@
 Snake::Snake(QWidget *parent) : QWidget(parent) {
 
     setStyleSheet("background-color:grey;");
-    leftDirection = false;
+    left = false;
     //start snake moving in right direction
-    rightDirection = true;
-    upDirection = false;
-    downDirection = false;
+    right = true;
+    up = false;
+    down = false;
     GamePlay = true;
 
     //set the paly area size
@@ -125,7 +125,7 @@ void Snake::foodCollision() {
         score++;
         QSound::play(":/new/prefix1/button-1.wav");
         placeFood();
-        if(score%2 == 0) placeObstacle();
+        if(the_snake.size() % 2) placeObstacle();
 
     }
 }
@@ -153,22 +153,22 @@ void Snake::move() {
     }
 
     //east
-    if (leftDirection) {
+    if (left) {
         the_snake[0].m_x-=BODY_SIZE;
     }
 
     //west
-    if (rightDirection) {
+    if (right) {
         the_snake[0].m_x+=BODY_SIZE;
     }
 
     //north
-    if (upDirection) {
+    if (up) {
         the_snake[0].m_y-=BODY_SIZE;
     }
 
     //souuth
-    if (downDirection) {
+    if (down) {
         the_snake[0].m_y+=BODY_SIZE;
     }
 }
@@ -209,8 +209,9 @@ void Snake::placeFood() {
 
     bool notundersnake{true};
     std::random_device dev;
-    std::uniform_int_distribution<int> dist(0,400);
+    std::uniform_int_distribution<int> dist(0,B_HEIGHT);
     coordinate temp((dist(dev)), (dist(dev)));
+    //check to make sure apple isnt placed under snake
     for(unsigned long int i{}; i < the_snake.size(); i++ ) {
         if((temp.m_x > the_snake[i].m_x - 15 && temp.m_x < the_snake[i].m_x + 15)
             && (temp.m_y > the_snake[i].m_y - 15 && temp.m_y < the_snake[i].m_y +15))
@@ -224,7 +225,7 @@ void Snake::placeObstacle() {
 
     bool not_duplicate{true};
     std::random_device dev;
-    std::uniform_int_distribution<int> dist(0,400);
+    std::uniform_int_distribution<int> dist(0,B_HEIGHT);
     coordinate p((dist(dev)), (dist(dev)));
     std::cout << p.m_x << " " << p.m_y << std::endl;
     if(placed_obstacles.empty()) placed_obstacles.push_back(p);
@@ -260,28 +261,28 @@ void Snake::keyPressEvent(QKeyEvent *e) {
 
     int key = e->key();
 
-    if ((key == Qt::Key_Left) && (!rightDirection)) {
-        leftDirection = true;
-        upDirection = false;
-        downDirection = false;
+    if ((key == Qt::Key_Left) && (!right)) {
+        left = true;
+        up = false;
+        down = false;
     }
 
-    if ((key == Qt::Key_Right) && (!leftDirection)) {
-        rightDirection = true;
-        upDirection = false;
-        downDirection = false;
+    if ((key == Qt::Key_Right) && (!left)) {
+        right = true;
+        up = false;
+        down = false;
     }
 
-    if ((key == Qt::Key_Up) && (!downDirection)) {
-        upDirection = true;
-        rightDirection = false;
-        leftDirection = false;
+    if ((key == Qt::Key_Up) && (!down)) {
+        up = true;
+        right = false;
+        left = false;
     }
 
-    if ((key == Qt::Key_Down) && (!upDirection)) {
-        downDirection = true;
-        rightDirection = false;
-        leftDirection = false;
+    if ((key == Qt::Key_Down) && (!up)) {
+        down = true;
+        right = false;
+        left = false;
     }
 
     QWidget::keyPressEvent(e);

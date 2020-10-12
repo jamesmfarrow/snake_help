@@ -27,9 +27,9 @@ class Snake : public QWidget {
       QImage obstacle_png;
 
       //play area width
-      static const int B_WIDTH = 600;
+      static const int B_WIDTH = 500;
       //play area height
-      static const int B_HEIGHT = 600;
+      static const int B_HEIGHT = 500;
 
       //this variable is needed otherwise snake is drawn on top of itself
       const int BODY_SIZE = 10;
@@ -46,10 +46,11 @@ class Snake : public QWidget {
 
 
       //use bool instead of enum for directions
-      bool leftDirection;
-      bool rightDirection;
-      bool upDirection;
-      bool downDirection;
+      bool left;
+      bool right;
+      bool up;
+      bool down;
+      //check game state playing/gameover
       bool GamePlay;
 
       void grow(int amount);
