@@ -11,46 +11,54 @@ class Snake : public QWidget {
 
   public:
       Snake(QWidget *parent = 0);
+      // store obstacles and check for duplicity
       std::vector<coordinate> placed_obstacles;
+      //vevtor for snake coordinates
+      std::vector<coordinate> the_snake;
 
-  //protected:
+
       void paintEvent(QPaintEvent *);
       void timerEvent(QTimerEvent *);
       void keyPressEvent(QKeyEvent *);
 
-  private:
       QImage dot_png;
       QImage head_png;
       QImage apple_png;
       QImage obstacle_png;
 
-      //static const int ALL_DOTS = 900;
+      //play area width
       static const int B_WIDTH = 600;
+      //play area height
       static const int B_HEIGHT = 600;
+
+      //this variable is needed otherwise snake is drawn on top of itself
       const int BODY_SIZE = 10;
-      const int DELAY = 140;
+
+      //delay offset for the speed game/refresh
+      const int DELAY = 100;
       int score = 0;
 
 
       int timerId;
-      int snake_size;
+      int snake_size = 3;//initial size of the snake
       coordinate apple;
+      coordinate snake;
 
-      int x_axis[B_WIDTH];
-      int y_axis[B_HEIGHT];
 
+      //use bool instead of enum for directions
       bool leftDirection;
       bool rightDirection;
       bool upDirection;
       bool downDirection;
       bool GamePlay;
 
+      void grow(int amount);
       void loadImages();
       void initGame();
-      void locateApple();
-      void locateObstacle();
-      void checkApple();
-      void checkObstacle();
+      void placeFood();
+      void placeObstacle();
+      void foodCollision();
+      void obstacleCollision();
       void checkCollision();
       void move();
       void doDrawing();
