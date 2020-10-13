@@ -7,6 +7,11 @@
 #include <vector>
 #include "coordinate.h"
 
+enum class Turn{ left, right, up, down };
+enum class Movement{ north, south, east, west };
+
+
+
 class Snake : public QWidget {
 
   public:
@@ -15,6 +20,9 @@ class Snake : public QWidget {
       std::vector<coordinate> placed_obstacles;
       //vevtor for snake coordinates
       std::vector<coordinate> the_snake;
+
+      Turn change{Turn::left};
+      Movement direction{Movement::west};
 
 
       void paintEvent(QPaintEvent *);

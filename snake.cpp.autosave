@@ -170,27 +170,6 @@ void Snake::move() {
 
             }
 
-    /*
-    //east
-    if (direction == Movement::east) {
-        the_snake[0].m_x-=BODY_SIZE;
-    }
-
-    //west
-    if (direction == Movement::west) {
-        the_snake[0].m_x+=BODY_SIZE;
-    }
-
-    //north
-    if (direction == Movement::north) {
-        the_snake[0].m_y-=BODY_SIZE;
-    }
-
-    //souuth
-    if (direction == Movement::south) {
-        the_snake[0].m_y+=BODY_SIZE;
-    }
-    */
 }
 
 void Snake::checkCollision() {
