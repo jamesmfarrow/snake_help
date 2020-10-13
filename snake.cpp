@@ -137,11 +137,12 @@ void Snake::obstacleCollision() {
             && (the_snake[0].m_y > placed_obstacles[i].m_y - 10 && the_snake[0].m_y < placed_obstacles[i].m_y + 10)) {
             QSound::play(":/new/prefix1/button-1.wav");
             GamePlay = false;
+            break;
+        }
             if(!GamePlay) {
                 killTimer(timerId);
             }
         }
-    }
 }
 
 
@@ -177,8 +178,12 @@ void Snake::checkCollision() {
 
     //below for self collision
     for(unsigned long int i{1}; i < the_snake.size() - 1; i++) {
-                if(the_snake[0] == the_snake[i]) GamePlay = false;
+                if(the_snake[0] == the_snake[i]) { GamePlay = false; break; }
             }
+
+    if(!GamePlay) {
+        killTimer(timerId);
+    }
 
 
     //add GamePlay = false to each if() to disable wraparound
@@ -199,9 +204,6 @@ void Snake::checkCollision() {
         the_snake[0].m_x = B_WIDTH;
     }
 
-    if(!GamePlay) {
-        killTimer(timerId);
-    }
 }
 
 void Snake::placeFood() {
