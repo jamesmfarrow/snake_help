@@ -18,12 +18,9 @@
 Snake::Snake(QWidget *parent) : QWidget(parent) {
 
     setStyleSheet("background-color:grey;");
-    //start snake moving in right direction
+    //start snake moving in west direction
+    change = Turn::right;
     direction = Movement::west;
-    /*left = false;
-    right = true;
-    up = false;
-    down = false;*/
     GamePlay = true;
 
     //set the paly area size
@@ -169,7 +166,6 @@ void Snake::move() {
             break;
 
             }
-
 }
 
 void Snake::checkCollision() {
@@ -206,10 +202,9 @@ void Snake::checkCollision() {
 
 void Snake::placeFood() {
 
-
     bool notundersnake{true};
     std::random_device dev;
-    std::uniform_int_distribution<int> dist(0,B_HEIGHT);
+    std::uniform_int_distribution<int> dist(0,B_HEIGHT-BODY_SIZE);
     coordinate temp((dist(dev)), (dist(dev)));
     //check to make sure apple isnt placed under snake
     for(unsigned long int i{}; i < the_snake.size(); i++ ) {
@@ -225,7 +220,7 @@ void Snake::placeObstacle() {
 
     bool not_duplicate{true};
     std::random_device dev;
-    std::uniform_int_distribution<int> dist(0,B_HEIGHT);
+    std::uniform_int_distribution<int> dist(0,B_HEIGHT-BODY_SIZE);
     coordinate p((dist(dev)), (dist(dev)));
     std::cout << p.m_x << " " << p.m_y << std::endl;
     if(placed_obstacles.empty()) placed_obstacles.push_back(p);
@@ -261,31 +256,20 @@ void Snake::keyPressEvent(QKeyEvent *e) {
 
     int key = e->key();
 
+
     if ((key == Qt::Key_Left) && (!(direction == Movement::west))) {
-        /*left = true;
-        up = false;
-        down = false;*/
         direction = Movement::east;
     }
 
     if ((key == Qt::Key_Right) && (!(direction == Movement::east))) {
-        /*right = true;
-        up = false;
-        down = false;*/
         direction = Movement::west;
     }
 
     if ((key == Qt::Key_Up) && (!(direction == Movement::south))) {
-        /*up = true;
-        right = false;
-        left = false;*/
         direction = Movement::north;
     }
 
     if ((key == Qt::Key_Down) && (!(direction == Movement::north))) {
-        /*down = true;
-        right = false;
-        left = false;*/
         direction = Movement::south;
     }
 

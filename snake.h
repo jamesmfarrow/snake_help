@@ -21,8 +21,8 @@ class Snake : public QWidget {
       //vevtor for snake coordinates
       std::vector<coordinate> the_snake;
 
-      Turn change{Turn::left};
-      Movement direction{Movement::west};
+      Turn change;
+      Movement direction;
 
 
       void paintEvent(QPaintEvent *);
