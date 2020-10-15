@@ -257,19 +257,19 @@ void Snake::keyPressEvent(QKeyEvent *e) {
     int key = e->key();
 
 
-    if ((key == Qt::Key_O) && (!(direction == Movement::west))) {
+    if ((key == Qt::Key_Left) && (!(direction == Movement::west))) {
         direction = Movement::east;
     }
 
-    if ((key == Qt::Key_P) && (!(direction == Movement::east))) {
+    if ((key == Qt::Key_Right) && (!(direction == Movement::east))) {
         direction = Movement::west;
     }
 
-    if ((key == Qt::Key_Q) && (!(direction == Movement::south))) {
+    if ((key == Qt::Key_Up) && (!(direction == Movement::south))) {
         direction = Movement::north;
     }
 
-    if ((key == Qt::Key_A) && (!(direction == Movement::north))) {
+    if ((key == Qt::Key_Down) && (!(direction == Movement::north))) {
         direction = Movement::south;
     }
 
