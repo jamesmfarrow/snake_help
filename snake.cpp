@@ -166,28 +166,6 @@ void Snake::move() {
             break;
 
             }
-
-    /*
-    //east
-    if (direction == Movement::east) {
-        the_snake[0].m_x-=BODY_SIZE;
-    }
-
-    //west
-    if (direction == Movement::west) {
-        the_snake[0].m_x+=BODY_SIZE;
-    }
-
-    //north
-    if (direction == Movement::north) {
-        the_snake[0].m_y-=BODY_SIZE;
-    }
-
-    //souuth
-    if (direction == Movement::south) {
-        the_snake[0].m_y+=BODY_SIZE;
-    }
-    */
 }
 
 void Snake::checkCollision() {
@@ -223,7 +201,6 @@ void Snake::checkCollision() {
 }
 
 void Snake::placeFood() {
-
 
     bool notundersnake{true};
     std::random_device dev;
@@ -280,19 +257,19 @@ void Snake::keyPressEvent(QKeyEvent *e) {
     int key = e->key();
 
 
-    if ((key == Qt::Key_Left) && (!(direction == Movement::west))) {
+    if ((key == Qt::Key_O) && (!(direction == Movement::west))) {
         direction = Movement::east;
     }
 
-    if ((key == Qt::Key_Right) && (!(direction == Movement::east))) {
+    if ((key == Qt::Key_P) && (!(direction == Movement::east))) {
         direction = Movement::west;
     }
 
-    if ((key == Qt::Key_Up) && (!(direction == Movement::south))) {
+    if ((key == Qt::Key_Q) && (!(direction == Movement::south))) {
         direction = Movement::north;
     }
 
-    if ((key == Qt::Key_Down) && (!(direction == Movement::north))) {
+    if ((key == Qt::Key_A) && (!(direction == Movement::north))) {
         direction = Movement::south;
     }
 
